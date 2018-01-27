@@ -9,8 +9,12 @@
 import UIKit
 import PINRemoteImage
 import SafariServices
+import Alamofire
 
 class MasterViewController: UITableViewController {
+  
+  //MARK: IBOutlet
+  @IBOutlet weak var segmentedController: UISegmentedControl!
 
   //MARK: - Properties
   var detailViewController: DetailViewController? = nil
@@ -68,6 +72,11 @@ class MasterViewController: UITableViewController {
     self.present(alert, animated: true, completion: nil)
   }
   
+  //MARK: - Segmented Action
+  @IBAction func segmentedValueChanged(_ sender: Any) {
+    loadGists(nil)
+  }
+  
   //MARK: - Pull to Refresh
   func refresh(sender: AnyObject){
     let defaults = UserDefaults.standard
@@ -78,11 +87,10 @@ class MasterViewController: UITableViewController {
   
   //MARK: - Load Gist
   func loadGists(_ url: String?) {
-    isLoading = true
-    GitHubAPIManager.sharedIntance.getMyStarredGists(url) { (result, nextPage) in
+    isLoading = false
+    let completionHandler: (Result<[Gist]>, String?) -> () = { (result, nextPage) in
       self.isLoading = false
       self.nextPageUrl = nextPage
-      //print(nextPage!)
       
       if (self.refreshControl != nil && self.refreshControl!.isRefreshing){
         self.refreshControl?.endRefreshing()
@@ -109,6 +117,17 @@ class MasterViewController: UITableViewController {
       let updateString = "Last update at: \(self.dateFormatter.string(from: now))"
       self.refreshControl?.attributedTitle = NSAttributedString(string: updateString)
       self.tableView.reloadData()
+    }
+    
+    switch segmentedController.selectedSegmentIndex {
+    case 0:
+      GitHubAPIManager.sharedIntance.getPublicGists(url, completionHandler: completionHandler)
+    case 1:
+      GitHubAPIManager.sharedIntance.getMyStarredGists(url, completionHandler: completionHandler)
+    case 2:
+      GitHubAPIManager.sharedIntance.getMyGists(url, completionHandler: completionHandler)
+    default:
+      print("got an index that I didn't expect for selectedSegmentIndex")
     }
     
   }

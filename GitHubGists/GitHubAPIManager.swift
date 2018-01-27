@@ -105,6 +105,14 @@ class GitHubAPIManager {
     }
   }
   
+  func getMyGists(_ urlPage: String?, completionHandler: @escaping (Result<[Gist]>, String?) -> ()){
+    if let urlString = urlPage {
+      getGists(urlRequest: GistsRouter.getAtPath(urlString), completionHandler: completionHandler)
+    } else {
+      getGists(urlRequest: GistsRouter.getMine(), completionHandler: completionHandler)
+    }
+  }
+  
   //MARK: - Get Url Page
   private func getNextPage(response: HTTPURLResponse?) -> String? {
     if let linkHeader = response?.allHeaderFields["Link"] as? String {

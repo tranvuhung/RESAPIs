@@ -12,9 +12,10 @@ import Alamofire
 enum GistsRouter: URLRequestConvertible {
   static let baseURLString:String = "https://api.github.com"
   
-  case getPublic([String: AnyObject]?)
-  case getAtPath(String)
+  case getPublic([String: AnyObject]?) // GET https://api.github.com/gists/public
+  case getAtPath(String) // GET at given path
   case getMyStarred() // GET https://api.github.com/gists/starred
+  case getMine() // GET https://api.github.com/gists
   
   var method: HTTPMethod {
     switch self {
@@ -23,6 +24,8 @@ enum GistsRouter: URLRequestConvertible {
     case .getAtPath:
       return .get
     case .getMyStarred:
+      return .get
+    case .getMine:
       return .get
     }
   }
@@ -39,6 +42,8 @@ enum GistsRouter: URLRequestConvertible {
         return (relativePath, nil)
       case .getMyStarred:
         return ("/gists/starred", nil)
+      case .getMine:
+        return ("/gists", nil)
       }
     }()
     
@@ -47,7 +52,7 @@ enum GistsRouter: URLRequestConvertible {
     urlRequest.httpMethod = method.rawValue
     
     // Set OAuth token if we have one
-    if let token = GitHubAPIManager.sharedIntance.OAuthToken{
+    if let token = GitHubAPIManager.sharedIntance.oauthToken{
       urlRequest.setValue("token \(token)", forHTTPHeaderField: "Authorization")
     }
     
