@@ -8,6 +8,7 @@
 
 import UIKit
 import PINRemoteImage
+import SafariServices
 
 class MasterViewController: UITableViewController {
 
@@ -18,6 +19,7 @@ class MasterViewController: UITableViewController {
   var nextPageUrl: String?
   var isLoading = false
   var dateFormatter = DateFormatter()
+  var safariViewController: SFSafariViewController?
   
   //MARK: - Life cycle
   override func viewDidLoad() {
@@ -36,7 +38,10 @@ class MasterViewController: UITableViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
-    loadGists(url: nil)
+    let defaults = UserDefaults.standard
+    if (!defaults.bool(forKey: "loadingOAuthToken")) {
+      loadInitialData()
+    }
   }
 
   override func viewWillAppear(_ animated: Bool) {
@@ -65,24 +70,30 @@ class MasterViewController: UITableViewController {
   
   //MARK: - Pull to Refresh
   func refresh(sender: AnyObject){
-    nextPageUrl = nil
-    loadGists(url: nil)
+    let defaults = UserDefaults.standard
+    defaults.set(false, forKey: "loadingOAuthToken")
+    nextPageUrl = nil // so it doesn't try to append the results
+    loadInitialData()
   }
   
   //MARK: - Load Gist
-  func loadGists(url: String?) {
+  func loadGists(_ url: String?) {
     isLoading = true
-    GitHubAPIManager.sharedIntance.getPublicGists(urlPage: url) { (result, nextPage) in
+    GitHubAPIManager.sharedIntance.getMyStarredGists(url) { (result, nextPage) in
       self.isLoading = false
       self.nextPageUrl = nextPage
-      print(nextPage!)
+      //print(nextPage!)
       
       if (self.refreshControl != nil && self.refreshControl!.isRefreshing){
         self.refreshControl?.endRefreshing()
       }
       
       guard result.error == nil else {
+        print("Lêu Lêu - lỗi 401 - Unauthorized")
         print(result.error!)
+        self.nextPageUrl = nil
+        self.isLoading = false
+        self.showAuthLoginView()
         return
       }
       if let gists = result.value {
@@ -100,6 +111,38 @@ class MasterViewController: UITableViewController {
       self.tableView.reloadData()
     }
     
+  }
+  
+  //MARK: - Check if Token
+  func loadInitialData(){
+    isLoading = true
+    GitHubAPIManager.sharedIntance.oauthTokenCompletionHandler = { error in
+      self.safariViewController?.dismiss(animated: true, completion: nil)
+      if let error = error{
+        print(error)
+        self.isLoading = false
+        // TODO: handle error
+        // Something went wrong, try again
+        self.showAuthLoginView()
+      } else {
+        self.loadGists(nil)
+      }
+    }
+    if !GitHubAPIManager.sharedIntance.hasAuthToken() {
+      //TODO: Show auth login view
+      showAuthLoginView()
+    } else {
+      loadGists(nil)
+    }
+  }
+  
+  //MARK: - Auth login view
+  func showAuthLoginView(){
+    //let storyboard = UIStoryboard(name: "Main", bundle: Bundle.main)
+    if let loginVC = storyboard?.instantiateViewController(withIdentifier: "LoginViewController") as? LoginViewController {
+      loginVC.delegate = self
+      self.present(loginVC, animated: true, completion: nil)
+    }
   }
 
   // MARK: - Segues
@@ -145,7 +188,7 @@ class MasterViewController: UITableViewController {
     let rowsLoaded = gists.count
     if let nextPage = nextPageUrl {
       if (!isLoading && (indexPath.row >= (rowsLoaded - rowsToLoadFormBotton))) {
-        self.loadGists(url: nextPage)
+        self.loadGists(nextPage)
       }
     }
     
@@ -165,7 +208,43 @@ class MasterViewController: UITableViewController {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
     }
   }
-
-
 }
 
+extension MasterViewController: LoginViewDelegate {
+  func didTapLoginButton() {
+    //TODO: - Set loadingOAutho token
+    let defaults = UserDefaults.standard
+    defaults.set(true, forKey: "loadingOAuthToken")
+    
+    self.dismiss(animated: false, completion: nil)
+    //TODO: - show web page
+    if let url = GitHubAPIManager.sharedIntance.urlToStartAuth2Login(){
+      self.safariViewController = SFSafariViewController(url: url)
+      self.safariViewController?.delegate = self
+      guard let webViewController = self.safariViewController else {return}
+      self.present(webViewController, animated: true, completion: nil)
+    } else {
+      defaults.set(false, forKey: "loadingOAuthToken")
+      if let completionHandler = GitHubAPIManager.sharedIntance.oauthTokenCompletionHandler {
+        let error = NSError(domain: GitHubAPIManager.ErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "Could not create an OAuth authorization URL", NSLocalizedRecoverySuggestionErrorKey: "Please retry your request"])
+        completionHandler(error)
+      }
+    }
+  }
+}
+
+extension MasterViewController: SFSafariViewControllerDelegate {
+  func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
+    if !didLoadSuccessfully {
+      // TODO: handle this better
+      let defaults = UserDefaults.standard
+      defaults.set(false, forKey: "loadingOAuthToken")
+      
+      if let conpletionHandler = GitHubAPIManager.sharedIntance.oauthTokenCompletionHandler {
+        let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: [NSLocalizedDescriptionKey: "No Internet Connection", NSLocalizedRecoverySuggestionErrorKey: "Please retry your request"])
+        conpletionHandler(error)
+      }
+      controller.dismiss(animated: true, completion: nil)
+    }
+  }
+}

@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0F9D293A73393FBE673708E3 /* Pods_GitHubGists.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40E2A157045E547CB6163D00 /* Pods_GitHubGists.framework */; };
+		621E9C232012E39C009D594A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621E9C222012E39C009D594A /* LoginViewController.swift */; };
+		621E9C252012F6EC009D594A /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 621E9C242012F6EC009D594A /* SafariServices.framework */; };
 		625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */; };
 		628B3CD5200E8FA700B4679B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628B3CD4200E8FA700B4679B /* AppDelegate.swift */; };
 		628B3CD7200E8FA700B4679B /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628B3CD6200E8FA700B4679B /* MasterViewController.swift */; };
@@ -23,6 +25,8 @@
 /* Begin PBXFileReference section */
 		2172208463314ACC890675CD /* Pods-GitHubGists.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubGists.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubGists/Pods-GitHubGists.debug.xcconfig"; sourceTree = "<group>"; };
 		40E2A157045E547CB6163D00 /* Pods_GitHubGists.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubGists.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		621E9C222012E39C009D594A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		621E9C242012F6EC009D594A /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataRequest+JSONSerializable.swift"; sourceTree = "<group>"; };
 		628B3CD1200E8FA700B4679B /* GitHubGists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubGists.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		628B3CD4200E8FA700B4679B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -43,6 +47,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				621E9C252012F6EC009D594A /* SafariServices.framework in Frameworks */,
 				0F9D293A73393FBE673708E3 /* Pods_GitHubGists.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -75,6 +80,7 @@
 				628B3CD6200E8FA700B4679B /* MasterViewController.swift */,
 				628B3CD8200E8FA700B4679B /* DetailViewController.swift */,
 				628B3CDA200E8FA700B4679B /* Main.storyboard */,
+				621E9C222012E39C009D594A /* LoginViewController.swift */,
 				628B3CDD200E8FA700B4679B /* Assets.xcassets */,
 				628B3CDF200E8FA700B4679B /* LaunchScreen.storyboard */,
 				628B3CE2200E8FA700B4679B /* Info.plist */,
@@ -98,6 +104,7 @@
 		DCAF9860C109164207DF3378 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				621E9C242012F6EC009D594A /* SafariServices.framework */,
 				40E2A157045E547CB6163D00 /* Pods_GitHubGists.framework */,
 			);
 			name = Frameworks;
@@ -231,6 +238,7 @@
 				628B3CD9200E8FA700B4679B /* DetailViewController.swift in Sources */,
 				628B3CED200E9C4200B4679B /* Gist.swift in Sources */,
 				628B3CE9200E915900B4679B /* GitHubAPIManager.swift in Sources */,
+				621E9C232012E39C009D594A /* LoginViewController.swift in Sources */,
 				628B3CD7200E8FA700B4679B /* MasterViewController.swift in Sources */,
 				625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */,
 				628B3CD5200E8FA700B4679B /* AppDelegate.swift in Sources */,

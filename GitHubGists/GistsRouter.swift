@@ -14,12 +14,15 @@ enum GistsRouter: URLRequestConvertible {
   
   case getPublic([String: AnyObject]?)
   case getAtPath(String)
+  case getMyStarred() // GET https://api.github.com/gists/starred
   
   var method: HTTPMethod {
     switch self {
     case .getPublic:
       return .get
     case .getAtPath:
+      return .get
+    case .getMyStarred:
       return .get
     }
   }
@@ -34,12 +37,20 @@ enum GistsRouter: URLRequestConvertible {
         let URL = NSURL(string: path)
         let relativePath = URL!.relativePath!
         return (relativePath, nil)
+      case .getMyStarred:
+        return ("/gists/starred", nil)
       }
     }()
     
     let url = try GistsRouter.baseURLString.asURL()
     var urlRequest = URLRequest(url: url.appendingPathComponent(result.path))
     urlRequest.httpMethod = method.rawValue
+    
+    // Set OAuth token if we have one
+    if let token = GitHubAPIManager.sharedIntance.OAuthToken{
+      urlRequest.setValue("token \(token)", forHTTPHeaderField: "Authorization")
+    }
+    
     urlRequest = try URLEncoding.default.encode(urlRequest, with: result.parameters)
     
     return urlRequest
