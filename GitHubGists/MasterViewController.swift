@@ -18,7 +18,6 @@ class MasterViewController: UITableViewController {
 
   //MARK: - Properties
   var detailViewController: DetailViewController? = nil
-  var objects = [Any]()
   var gists = [Gist]()
   var nextPageUrl: String?
   var isLoading = false
@@ -168,9 +167,9 @@ class MasterViewController: UITableViewController {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "showDetail" {
         if let indexPath = tableView.indexPathForSelectedRow {
-            _ = objects[indexPath.row] as! Gist
+            let gist = gists[indexPath.row] 
             let controller = (segue.destination as! UINavigationController).topViewController as! DetailViewController
-            //controller.detailItem = gist
+            controller.gist = gist
             controller.navigationItem.leftBarButtonItem = splitViewController?.displayModeButtonItem
             controller.navigationItem.leftItemsSupplementBackButton = true
         }

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0F9D293A73393FBE673708E3 /* Pods_GitHubGists.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40E2A157045E547CB6163D00 /* Pods_GitHubGists.framework */; };
+		62186B0C201ED5BA00DA02B1 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62186B0B201ED5BA00DA02B1 /* File.swift */; };
 		621E9C232012E39C009D594A /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 621E9C222012E39C009D594A /* LoginViewController.swift */; };
 		621E9C252012F6EC009D594A /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 621E9C242012F6EC009D594A /* SafariServices.framework */; };
 		625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */; };
@@ -25,6 +26,7 @@
 /* Begin PBXFileReference section */
 		2172208463314ACC890675CD /* Pods-GitHubGists.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-GitHubGists.debug.xcconfig"; path = "Pods/Target Support Files/Pods-GitHubGists/Pods-GitHubGists.debug.xcconfig"; sourceTree = "<group>"; };
 		40E2A157045E547CB6163D00 /* Pods_GitHubGists.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_GitHubGists.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		62186B0B201ED5BA00DA02B1 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
 		621E9C222012E39C009D594A /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		621E9C242012F6EC009D594A /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataRequest+JSONSerializable.swift"; sourceTree = "<group>"; };
@@ -87,6 +89,7 @@
 				628B3CE8200E915900B4679B /* GitHubAPIManager.swift */,
 				628B3CEA200E943100B4679B /* GistsRouter.swift */,
 				628B3CEC200E9C4200B4679B /* Gist.swift */,
+				62186B0B201ED5BA00DA02B1 /* File.swift */,
 				625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */,
 			);
 			path = GitHubGists;
@@ -241,6 +244,7 @@
 				621E9C232012E39C009D594A /* LoginViewController.swift in Sources */,
 				628B3CD7200E8FA700B4679B /* MasterViewController.swift in Sources */,
 				625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */,
+				62186B0C201ED5BA00DA02B1 /* File.swift in Sources */,
 				628B3CD5200E8FA700B4679B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

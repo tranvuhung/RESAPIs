@@ -11,7 +11,7 @@ import SwiftyJSON
 import Alamofire
 
 public protocol ResponseJSONObjectSerializable {
-  init?(json: SwiftyJSON.JSON)
+  init?(_ json: SwiftyJSON.JSON)
 }
 
 extension DataRequest {
@@ -32,7 +32,7 @@ extension DataRequest {
       switch result {
       case .success(let value):
         let json = SwiftyJSON.JSON(value)
-        if let object = T(json: json) {
+        if let object = T(json) {
           return .success(object)
         } else {
           let failureReason = "Object could not be created from JSON."
@@ -65,7 +65,7 @@ extension DataRequest {
         let json = JSON(value)
         var objects: [T] = []
         for (_, item) in json {
-          if let object = T(json: item) {
+          if let object = T(item) {
             objects.append(object)
           }
         }
