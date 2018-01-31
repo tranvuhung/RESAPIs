@@ -16,6 +16,9 @@ enum GistsRouter: URLRequestConvertible {
   case getAtPath(String) // GET at given path
   case getMyStarred() // GET https://api.github.com/gists/starred
   case getMine() // GET https://api.github.com/gists
+  case isStarred(String) // GET https://api.github.com/gists/\(gistId)/star
+  case star(String) // PUT https://api.github.com/gists/\(gistId)/star
+  case unstar(String) // DELETE https://api.github.com/gists/\(gistId)/star
   
   var method: HTTPMethod {
     switch self {
@@ -27,6 +30,12 @@ enum GistsRouter: URLRequestConvertible {
       return .get
     case .getMine:
       return .get
+    case .isStarred:
+      return .get
+    case .star:
+      return .put
+    case .unstar:
+      return .delete
     }
   }
   
@@ -44,6 +53,12 @@ enum GistsRouter: URLRequestConvertible {
         return ("/gists/starred", nil)
       case .getMine:
         return ("/gists", nil)
+      case .isStarred(let id):
+        return ("/gists/\(id)/star", nil)
+      case .star(let id):
+        return ("/gists/\(id)/star", nil)
+      case .unstar(let id):
+        return ("/gists/\(id)/star", nil)
       }
     }()
     

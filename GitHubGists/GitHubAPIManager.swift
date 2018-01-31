@@ -113,6 +113,56 @@ class GitHubAPIManager {
     }
   }
   
+  // MARK: Starring / Unstarring / Star status
+  func isGistStarred(gistId: String, completionHandler: @escaping (Result<Bool>)->()){
+    // GET /gists/:id/star
+    sessionManager.request(GistsRouter.isStarred(gistId)).validate(statusCode: [204]).response { (dataResponse) in
+      if let urlResponse = dataResponse.response, let authError = self.checkUnauthorized(urlResponse) {
+        completionHandler(.failure(authError))
+        return
+      }
+      // 204 if starred, 404 if not
+      if let error = dataResponse.error {
+        print(error)
+        if dataResponse.response?.statusCode == 404 {
+          completionHandler(.success(false))
+          return
+        }
+        completionHandler(.failure(error))
+        return
+      }
+      completionHandler(.success(true))
+    }
+  }
+  
+  func starGist(gistId: String, completionHandler: @escaping (Error?) -> ()){
+    sessionManager.request(GistsRouter.star(gistId)).response { (dataResponse) in
+      if let urlResponse = dataResponse.response, let authError = self.checkUnauthorized(urlResponse) {
+        completionHandler(authError)
+        return
+      }
+      if let error = dataResponse.error {
+        print(error)
+        return
+      }
+      completionHandler(dataResponse.error)
+    }
+  }
+  
+  func unstarGist(gistId: String, completionHandler: @escaping (Error?) -> ()){
+    sessionManager.request(GistsRouter.unstar(gistId)).response { (dataResponse) in
+      if let urlResponse = dataResponse.response, let authError = self.checkUnauthorized(urlResponse) {
+        completionHandler(authError)
+        return
+      }
+      if let error = dataResponse.error {
+        print(error)
+        return
+      }
+      completionHandler(dataResponse.error)
+    }
+  }
+  
   //MARK: - Get Url Page
   private func getNextPage(response: HTTPURLResponse?) -> String? {
     if let linkHeader = response?.allHeaderFields["Link"] as? String {
