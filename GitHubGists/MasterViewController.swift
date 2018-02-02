@@ -28,10 +28,6 @@ class MasterViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     // Do any additional setup after loading the view, typically from a nib.
-    navigationItem.leftBarButtonItem = editButtonItem
-
-    let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject(_:)))
-    navigationItem.rightBarButtonItem = addButton
     if let split = splitViewController {
         let controllers = split.viewControllers
         detailViewController = (controllers[controllers.count-1] as! UINavigationController).topViewController as? DetailViewController
@@ -63,16 +59,23 @@ class MasterViewController: UITableViewController {
     // Dispose of any resources that can be recreated.
   }
 
+  //MARK: - Creation
   func insertNewObject(_ sender: Any) {
-    
-    let alert = UIAlertController(title: "Not Implementd", message: "Cant't create new gists yet, will implement later", preferredStyle: .alert)
-    alert.addAction(UIAlertAction(title: "OK", style: .default, handler: nil))
-    
-    self.present(alert, animated: true, completion: nil)
+    let createVC = CreateGistsViewController(nibName: nil, bundle: nil)
+    self.navigationController?.pushViewController(createVC!, animated: true)
   }
   
   //MARK: - Segmented Action
   @IBAction func segmentedValueChanged(_ sender: Any) {
+    // only show add button for my gists
+    if segmentedController.selectedSegmentIndex == 2 {
+      navigationItem.leftBarButtonItem = self.editButtonItem
+      let addButton = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(insertNewObject))
+      navigationItem.rightBarButtonItem = addButton
+    } else {
+      navigationItem.leftBarButtonItem = nil
+      navigationItem.rightBarButtonItem = nil
+    }
     loadGists(nil)
   }
   
@@ -215,15 +218,30 @@ class MasterViewController: UITableViewController {
 
   override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
     // Return false if you do not want the specified item to be editable.
-    return false
+    return segmentedController.selectedSegmentIndex == 2
   }
 
   override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
     if editingStyle == .delete {
-        gists.remove(at: indexPath.row)
-        tableView.deleteRows(at: [indexPath], with: .fade)
-    } else if editingStyle == .insert {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view.
+      let gistDelete = gists.remove(at: indexPath.row)
+      tableView.deleteRows(at: [indexPath], with: .fade)
+      //Delete form API
+      guard let id = gists[indexPath.row].id else {return}
+      GitHubAPIManager.sharedIntance.deleteGist(gistId: id, completionHandler: { (error) in
+        if error != nil {
+          print(error!)
+          //put it back
+          self.gists.insert(gistDelete, at: indexPath.row)
+          self.tableView.insertRows(at: [indexPath], with: .right)
+          // tell them it didn't work
+          let alertController = UIAlertController(title: "Could not delete gist",
+                                                  message: "Sorry, your gist couldn't be deleted. Maybe GitHub is down or you don't have an internet connection.",preferredStyle: .alert)
+          // add ok button
+          let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+          alertController.addAction(okAction)
+          self.present(alertController, animated: true, completion: nil)
+        }
+      })
     }
   }
 }

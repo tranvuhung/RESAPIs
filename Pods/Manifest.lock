@@ -11,12 +11,14 @@ PODS:
     - FLAnimatedImage (>= 1.0)
     - PINRemoteImage/Core
   - SwiftyJSON (4.0.0)
+  - XLForm (4.0.0)
 
 DEPENDENCIES:
   - Alamofire (~> 4.5)
   - Locksmith
   - PINRemoteImage
   - SwiftyJSON (~> 4.0)
+  - XLForm
 
 SPEC CHECKSUMS:
   Alamofire: f41a599bd63041760b26d393ec1069d9d7b917f4
@@ -25,7 +27,8 @@ SPEC CHECKSUMS:
   PINCache: ce36ed282031b92fc7733ffe831f474ff80fddc2
   PINRemoteImage: 4ac4011c5caefd6befd99758e09becede05d3226
   SwiftyJSON: 070dabdcb1beb81b247c65ffa3a79dbbfb3b48aa
+  XLForm: 04110197c12187dd28a6c7295d3d8b95f4fdb4de
 
-PODFILE CHECKSUM: afc31d9904ca10b6d3f65521f1063f35c3e0c116
+PODFILE CHECKSUM: a17b5c45d61083594b00234810bd52bb622546c0
 
 COCOAPODS: 1.2.0

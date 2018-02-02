@@ -80,6 +80,7 @@ class DetailViewController: UIViewController {
         } else {
           self.isStarred = true
           self.tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
+          //self.tableView.reloadSections([0], with: .automatic)
         }
       })
     }
@@ -101,6 +102,7 @@ class DetailViewController: UIViewController {
         } else {
           self.isStarred = false
           self.tableView.reloadRows(at: [IndexPath(row: 2, section: 0)], with: .automatic)
+          //self.tableView.reloadSections([0], with: .automatic)
         }
       })
     }

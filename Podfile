@@ -9,5 +9,6 @@ target 'GitHubGists' do
   pod 'SwiftyJSON', '~> 4.0'
   pod 'PINRemoteImage'
   pod 'Locksmith'
+  pod 'XLForm'
 
 end

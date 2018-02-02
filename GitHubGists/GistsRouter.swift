@@ -19,6 +19,8 @@ enum GistsRouter: URLRequestConvertible {
   case isStarred(String) // GET https://api.github.com/gists/\(gistId)/star
   case star(String) // PUT https://api.github.com/gists/\(gistId)/star
   case unstar(String) // DELETE https://api.github.com/gists/\(gistId)/star
+  case delete(String)  // DELETE https://api.github.com/gists/\(gistId)
+  case create([String: Any]?) // POST https://api.github.com/gists
   
   var method: HTTPMethod {
     switch self {
@@ -36,12 +38,16 @@ enum GistsRouter: URLRequestConvertible {
       return .put
     case .unstar:
       return .delete
+    case .delete:
+      return .delete
+    case .create:
+      return .post
     }
   }
   
   func asURLRequest() throws -> URLRequest {
     
-    let result: (path: String, parameters: [String: AnyObject]?) = {
+    let result: (path: String, parameters: [String: Any]?) = {
       switch self {
       case .getPublic:
         return ("/gists/public", nil)
@@ -59,6 +65,10 @@ enum GistsRouter: URLRequestConvertible {
         return ("/gists/\(id)/star", nil)
       case .unstar(let id):
         return ("/gists/\(id)/star", nil)
+      case .delete(let id):
+        return ("/gists/\(id)", nil)
+      case .create(let parameters):
+        return ("/gists", parameters)
       }
     }()
     
@@ -71,7 +81,7 @@ enum GistsRouter: URLRequestConvertible {
       urlRequest.setValue("token \(token)", forHTTPHeaderField: "Authorization")
     }
     
-    urlRequest = try URLEncoding.default.encode(urlRequest, with: result.parameters)
+    urlRequest = try JSONEncoding.default.encode(urlRequest, with: result.parameters)
     
     return urlRequest
   }

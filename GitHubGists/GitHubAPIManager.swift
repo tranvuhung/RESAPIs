@@ -163,6 +163,61 @@ class GitHubAPIManager {
     }
   }
   
+  //MARK: - Delete gist
+  func deleteGist(gistId: String, completionHandler: @escaping (Error?) -> ()){
+    sessionManager.request(GistsRouter.delete(gistId)).response { (dataResponse) in
+      if let urlResponse = dataResponse.response, let authError = self.checkUnauthorized(urlResponse) {
+        completionHandler(authError)
+        return
+      }
+      if let error = dataResponse.error{
+        print(error)
+        return
+      }
+      completionHandler(dataResponse.error)
+    }
+  }
+  
+  //MARK: - Create gist
+  func createNewGist(description: String, isPublic: Bool, files: [File], completionHandler: @escaping (Result<Bool>) -> ()){
+    
+    let publicString: String
+    if isPublic{
+      publicString = "true"
+    } else {
+      publicString = "false"
+    }
+    var filesDictionary = [String: Any]()
+    for file in files {
+      if let name = file.filename, let content = file.content {
+        filesDictionary[name] = ["content": content]
+      }
+    }
+    
+    let parameters: [String: Any] = ["description": description, "public": publicString, "files": filesDictionary]
+    
+    sessionManager.request(GistsRouter.create(parameters))
+      .validate { request, response, data in
+        guard data != nil else {
+          let error = NSError(domain: GitHubAPIManager.ErrorDomain, code: -1, userInfo: [NSLocalizedDescriptionKey: "We didn't get any data", NSLocalizedRecoverySuggestionErrorKey: "Please retry your request"])
+          return .failure(error)
+        }
+        if let authError = self.checkUnauthorized(response) {
+          completionHandler(.failure(authError))
+        }
+        return .success
+      }
+      .response { (dataResponse) in
+        if let error = dataResponse.error {
+          print(error)
+          completionHandler(.success(false))
+          return
+        }
+        self.clearCache()
+        completionHandler(.success(true))
+    }
+  }
+  
   //MARK: - Get Url Page
   private func getNextPage(response: HTTPURLResponse?) -> String? {
     if let linkHeader = response?.allHeaderFields["Link"] as? String {
@@ -324,5 +379,11 @@ class GitHubAPIManager {
       return lostOAuth
     }
     return nil
+  }
+  
+  //MARK: - Clear Cache
+  func clearCache() {
+    let cache = URLCache.shared
+    cache.removeAllCachedResponses()
   }
 }
