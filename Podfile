@@ -10,5 +10,6 @@ target 'GitHubGists' do
   pod 'PINRemoteImage'
   pod 'Locksmith'
   pod 'XLForm'
+  pod 'BRYXBanner'
 
 end

@@ -10,6 +10,7 @@ import UIKit
 import PINRemoteImage
 import SafariServices
 import Alamofire
+import BRYXBanner
 
 class MasterViewController: UITableViewController {
   
@@ -23,6 +24,7 @@ class MasterViewController: UITableViewController {
   var isLoading = false
   var dateFormatter = DateFormatter()
   var safariViewController: SFSafariViewController?
+  var notConnectedBanner: Banner?
   
   //MARK: - Life cycle
   override func viewDidLoad() {
@@ -58,6 +60,14 @@ class MasterViewController: UITableViewController {
     super.didReceiveMemoryWarning()
     // Dispose of any resources that can be recreated.
   }
+  
+  //MARK: - dismiss the banner when we change views
+  override func viewWillDisappear(_ animated: Bool) {
+    if let existingBanner = self.notConnectedBanner {
+      existingBanner.dismiss()
+    }
+    super.viewWillDisappear(animated)
+  }
 
   //MARK: - Creation
   func insertNewObject(_ sender: Any) {
@@ -76,6 +86,9 @@ class MasterViewController: UITableViewController {
       navigationItem.leftBarButtonItem = nil
       navigationItem.rightBarButtonItem = nil
     }
+    // clear gists so they can't get shown for the wrong list
+    self.gists = [Gist]()
+    self.tableView.reloadData()
     loadGists(nil)
   }
   
@@ -103,7 +116,23 @@ class MasterViewController: UITableViewController {
         print(result.error!)
         self.nextPageUrl = nil
         self.isLoading = false
-        self.showAuthLoginView()
+        
+        if let error = result.error as NSError? {
+          if error.domain == NSURLErrorDomain{
+            if error.code == NSURLErrorUserAuthenticationRequired{
+              self.showAuthLoginView()
+            } else if error.code == NSURLErrorNotConnectedToInternet{
+              if let existingBanner = self.notConnectedBanner{
+                existingBanner.dismiss()
+              }
+              self.notConnectedBanner = Banner(title: "No Internet Connection", subtitle: "Could not load gists. Try again when you're connected to the internet", image: nil, backgroundColor: .red, didTapBlock: nil)
+              self.notConnectedBanner?.dismissesOnSwipe = true
+              self.notConnectedBanner?.show()
+            }
+          }
+        }
+        
+        
         return
       }
       if let gists = result.value {
@@ -139,12 +168,21 @@ class MasterViewController: UITableViewController {
     isLoading = true
     GitHubAPIManager.sharedIntance.oauthTokenCompletionHandler = { error in
       self.safariViewController?.dismiss(animated: true, completion: nil)
-      if let error = error{
+      if let error = error as NSError?{
         print(error)
         self.isLoading = false
         // TODO: handle error
-        // Something went wrong, try again
-        self.showAuthLoginView()
+        if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet{
+          if let existingBanner = self.notConnectedBanner{
+            existingBanner.dismiss()
+          }
+          self.notConnectedBanner = Banner(title: "No Internet Connection", subtitle: "Could not load gists. Try again when you're connected to the internet", image: nil, backgroundColor: .red, didTapBlock: nil)
+          self.notConnectedBanner?.dismissesOnSwipe = true
+          self.notConnectedBanner?.show()
+        } else {
+          // Something went wrong, try again
+          self.showAuthLoginView()
+        }
       } else {
         self.loadGists(nil)
       }
@@ -273,8 +311,8 @@ extension MasterViewController: SFSafariViewControllerDelegate {
   func safariViewController(_ controller: SFSafariViewController, didCompleteInitialLoad didLoadSuccessfully: Bool) {
     if !didLoadSuccessfully {
       // TODO: handle this better
-      let defaults = UserDefaults.standard
-      defaults.set(false, forKey: "loadingOAuthToken")
+      //let defaults = UserDefaults.standard
+      //defaults.set(false, forKey: "loadingOAuthToken")
       
       if let conpletionHandler = GitHubAPIManager.sharedIntance.oauthTokenCompletionHandler {
         let error = NSError(domain: NSURLErrorDomain, code: NSURLErrorNotConnectedToInternet, userInfo: [NSLocalizedDescriptionKey: "No Internet Connection", NSLocalizedRecoverySuggestionErrorKey: "Please retry your request"])

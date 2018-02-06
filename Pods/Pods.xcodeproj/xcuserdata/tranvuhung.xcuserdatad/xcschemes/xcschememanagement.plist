@@ -9,6 +9,11 @@
 			<key>isShown</key>
 			<false/>
 		</dict>
+		<key>BRYXBanner.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+		</dict>
 		<key>FLAnimatedImage.xcscheme</key>
 		<dict>
 			<key>isShown</key>
@@ -47,17 +52,22 @@
 	</dict>
 	<key>SuppressBuildableAutocreation</key>
 	<dict>
-		<key>14BB46980B9915BD1F8687CAC68E3F32</key>
+		<key>0F3B36547C3C2CC3060475E614BCBF32</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>41F230E1EAEE78F4660BFAB712B8D865</key>
+		<key>2A226ECD43BB5DF7329ECA2CD9979663</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
 		<key>6A4878A4A87B118BAF0877A103373708</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>76FB067B5039767CE380FDD73661BE9C</key>
 		<dict>
 			<key>primary</key>
 			<true/>
@@ -72,12 +82,12 @@
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>A02EE1452A6B9ED8895E739554320B81</key>
+		<key>94616B87A9AA8A12CE09EA821252FE72</key>
 		<dict>
 			<key>primary</key>
 			<true/>
 		</dict>
-		<key>AEAFE0041ABB053EBAEE6272D1B8284C</key>
+		<key>A02EE1452A6B9ED8895E739554320B81</key>
 		<dict>
 			<key>primary</key>
 			<true/>

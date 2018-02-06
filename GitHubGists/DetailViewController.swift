@@ -8,10 +8,12 @@
 
 import UIKit
 import SafariServices
+import BRYXBanner
 
 class DetailViewController: UIViewController {
 
   @IBOutlet weak var tableView: UITableView!
+  var notConnectedBanner: Banner?
   
   var gist: Gist? {
     didSet {
@@ -44,16 +46,39 @@ class DetailViewController: UIViewController {
     // Dispose of any resources that can be recreated.
   }
   
+  //MARK: - dismiss the banner when we change views
+  override func viewWillDisappear(_ animated: Bool) {
+    if let existingBanner = self.notConnectedBanner {
+      existingBanner.dismiss()
+    }
+    super.viewWillDisappear(animated)
+  }
+  
   func fetchStarredStatus(){
     if let gistId = gist?.id {
       GitHubAPIManager.sharedIntance.isGistStarred(gistId: gistId, completionHandler: { (result) in
-        if let error = result.error {
+        if let error = result.error as NSError? {
           print(error)
-          self.alertController = UIAlertController(title: "Could not get starred status", message: error.localizedDescription, preferredStyle: .alert)
-          // add ok button
-          let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
-          self.alertController?.addAction(okAction)
-          self.present(self.alertController!, animated:true, completion: nil)
+          if error.domain == NSURLErrorDomain{
+            if error.code == NSURLErrorUserAuthenticationRequired{
+              self.alertController = UIAlertController(title: "Could not get starred status", message: error.description, preferredStyle: .alert)
+              // add ok button
+              let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+              self.alertController?.addAction(okAction)
+              self.present(self.alertController!, animated:true, completion: nil)
+            } else if error.code == NSURLErrorNotConnectedToInternet{
+              // check for existing banner
+              if let existingBanner = self.notConnectedBanner {
+                existingBanner.dismiss()
+              }
+              self.notConnectedBanner = Banner(title: "No Internet Connection",
+                                               subtitle: "Can not display starred status. Try again when you're connected to the internet",
+                                               image: nil,
+                                               backgroundColor: UIColor.orange)
+              self.notConnectedBanner?.dismissesOnSwipe = true
+              self.notConnectedBanner?.show(duration: nil)
+            }
+          }
         }
         if let status = result.value, self.isStarred == nil {
           self.isStarred = status
@@ -67,12 +92,15 @@ class DetailViewController: UIViewController {
   func starThisGist(){
     if let gistId = gist?.id {
       GitHubAPIManager.sharedIntance.starGist(gistId: gistId, completionHandler: { (error) in
-        if let error = error {
+        if let error = error as NSError? {
           print(error)
-          self.alertController = UIAlertController(title: "Could not star gist",
-                                                   message: "Sorry, your gist couldn't be starred. " +
-            "Maybe GitHub is down or you don't have an internet connection.",
-                                                   preferredStyle: .alert)
+          if error.domain == NSURLErrorDomain && error.code == NSURLErrorUserAuthenticationRequired{
+            self.alertController = UIAlertController(title: "Could load starred status", message: error.description, preferredStyle: .alert)
+          } else {
+            self.alertController = UIAlertController(title: "Could not star gist",
+                                                     message: "Sorry, your gist couldn't be starred.Maybe GitHub is down or you don't have an internet connection.",
+                                                     preferredStyle: .alert)
+          }
           // add ok button
           let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
           self.alertController?.addAction(okAction)
@@ -89,12 +117,15 @@ class DetailViewController: UIViewController {
   func unstarThisGist(){
     if let gistId = gist?.id {
       GitHubAPIManager.sharedIntance.unstarGist(gistId: gistId, completionHandler: { (error) in
-        if let error = error {
+        if let error = error as NSError? {
           print(error)
-          self.alertController = UIAlertController(title: "Could not unstar gist",
-                                                   message: "Sorry, your gist couldn't be unstarred. " +
-            "Maybe GitHub is down or you don't have an internet connection.",
-                                                   preferredStyle: .alert)
+          if error.domain == NSURLErrorDomain && error.code == NSURLErrorUserAuthenticationRequired{
+            self.alertController = UIAlertController(title: "Could load starred status", message: error.description, preferredStyle: .alert)
+          } else {
+            self.alertController = UIAlertController(title: "Could not star gist",
+                                                     message: "Sorry, your gist couldn't be starred.Maybe GitHub is down or you don't have an internet connection.",
+                                                     preferredStyle: .alert)
+          }
           // add ok button
           let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
           self.alertController?.addAction(okAction)

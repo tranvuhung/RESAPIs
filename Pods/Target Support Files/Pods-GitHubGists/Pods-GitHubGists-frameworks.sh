@@ -90,6 +90,7 @@ strip_invalid_archs() {
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/BRYXBanner/BRYXBanner.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FLAnimatedImage/FLAnimatedImage.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Locksmith/Locksmith.framework"
   install_framework "$BUILT_PRODUCTS_DIR/PINCache/PINCache.framework"
@@ -99,6 +100,7 @@ if [[ "$CONFIGURATION" == "Debug" ]]; then
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
   install_framework "$BUILT_PRODUCTS_DIR/Alamofire/Alamofire.framework"
+  install_framework "$BUILT_PRODUCTS_DIR/BRYXBanner/BRYXBanner.framework"
   install_framework "$BUILT_PRODUCTS_DIR/FLAnimatedImage/FLAnimatedImage.framework"
   install_framework "$BUILT_PRODUCTS_DIR/Locksmith/Locksmith.framework"
   install_framework "$BUILT_PRODUCTS_DIR/PINCache/PINCache.framework"
