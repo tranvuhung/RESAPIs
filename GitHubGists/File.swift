@@ -9,7 +9,7 @@
 import Foundation
 import SwiftyJSON
 
-class File: ResponseJSONObjectSerializable {
+class File: NSObject, NSCoding, ResponseJSONObjectSerializable {
   var filename: String?
   var raw_url: String?
   var content: String?
@@ -22,5 +22,20 @@ class File: ResponseJSONObjectSerializable {
   init?(name: String?, content: String?){
     self.filename = name
     self.content = content
+  }
+  
+  //MARK: - NSCoding
+  func encode(with aCoder: NSCoder) {
+    aCoder.encode(filename, forKey: "filesname")
+    aCoder.encode(raw_url, forKey: "raw_url")
+    aCoder.encode(content, forKey: "content")
+  }
+  
+  required convenience init?(coder aDecoder: NSCoder) {
+    let fileName = aDecoder.decodeObject(forKey: "filename") as? String
+    let content = aDecoder.decodeObject(forKey: "content") as? String
+    
+    self.init(name: fileName, content: content)
+    raw_url = aDecoder.decodeObject(forKey: "raw_url") as? String
   }
 }

@@ -13,6 +13,7 @@
 		621E9C252012F6EC009D594A /* SafariServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 621E9C242012F6EC009D594A /* SafariServices.framework */; };
 		625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */; };
 		626114752022B7DC0012A13E /* CreateGistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 626114742022B7DC0012A13E /* CreateGistsViewController.swift */; };
+		62818DFA202A090100C50CFC /* PersistenceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 62818DF9202A090100C50CFC /* PersistenceManager.swift */; };
 		628B3CD5200E8FA700B4679B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628B3CD4200E8FA700B4679B /* AppDelegate.swift */; };
 		628B3CD7200E8FA700B4679B /* MasterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628B3CD6200E8FA700B4679B /* MasterViewController.swift */; };
 		628B3CD9200E8FA700B4679B /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 628B3CD8200E8FA700B4679B /* DetailViewController.swift */; };
@@ -32,6 +33,7 @@
 		621E9C242012F6EC009D594A /* SafariServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SafariServices.framework; path = System/Library/Frameworks/SafariServices.framework; sourceTree = SDKROOT; };
 		625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "DataRequest+JSONSerializable.swift"; sourceTree = "<group>"; };
 		626114742022B7DC0012A13E /* CreateGistsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateGistsViewController.swift; sourceTree = "<group>"; };
+		62818DF9202A090100C50CFC /* PersistenceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceManager.swift; sourceTree = "<group>"; };
 		628B3CD1200E8FA700B4679B /* GitHubGists.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GitHubGists.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		628B3CD4200E8FA700B4679B /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		628B3CD6200E8FA700B4679B /* MasterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MasterViewController.swift; sourceTree = "<group>"; };
@@ -94,6 +96,7 @@
 				628B3CEC200E9C4200B4679B /* Gist.swift */,
 				62186B0B201ED5BA00DA02B1 /* File.swift */,
 				625C6AD1200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift */,
+				62818DF9202A090100C50CFC /* PersistenceManager.swift */,
 			);
 			path = GitHubGists;
 			sourceTree = "<group>";
@@ -249,6 +252,7 @@
 				628B3CD7200E8FA700B4679B /* MasterViewController.swift in Sources */,
 				625C6AD2200EF4DF0074DBB4 /* DataRequest+JSONSerializable.swift in Sources */,
 				62186B0C201ED5BA00DA02B1 /* File.swift in Sources */,
+				62818DFA202A090100C50CFC /* PersistenceManager.swift in Sources */,
 				628B3CD5200E8FA700B4679B /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

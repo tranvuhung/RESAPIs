@@ -122,6 +122,22 @@ class MasterViewController: UITableViewController {
             if error.code == NSURLErrorUserAuthenticationRequired{
               self.showAuthLoginView()
             } else if error.code == NSURLErrorNotConnectedToInternet{
+              //Load gists if not internet connection
+              let path: Path
+              if self.segmentedController.selectedSegmentIndex == 0 {
+                path = .Public
+              } else if self.segmentedController.selectedSegmentIndex == 1 {
+                path = .Starred
+              } else {
+                path = .MyGists
+              }
+              if let archived: [Gist] = PersistenceManager.loadArray(path: path){
+                self.gists = archived
+              } else {
+                self.gists = []  // don't have any saved gists
+              }
+              
+              // show banner
               if let existingBanner = self.notConnectedBanner{
                 existingBanner.dismiss()
               }
@@ -141,6 +157,15 @@ class MasterViewController: UITableViewController {
         } else {
           self.gists = gists
         }
+        let path: Path
+        if self.segmentedController.selectedSegmentIndex == 0 {
+          path = .Public
+        } else if self.segmentedController.selectedSegmentIndex == 1 {
+          path = .Starred
+        } else {
+          path = .MyGists
+        }
+        PersistenceManager.saveArray(toSave: self.gists, path: path)
       }
       
       // update "last updated" title for refresh control
@@ -231,7 +256,7 @@ class MasterViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
 
     let gist = gists[indexPath.row]
-    cell.textLabel?.text = gist.description
+    cell.textLabel?.text = gist.gistDescription
     cell.detailTextLabel?.text = gist.ownerLogin
     cell.imageView?.image = nil
     
